@@ -1,6 +1,24 @@
 name: Main workflow
 on: push
+
+env: # Set the secret as an input
+  docker_username: mayde23
+  docker_password: ${{ secrets.DOCKER_PASSWORD }} #Nees to be set to be made available to the workflow
+  GIT_COMMIT: ${{ github.sha }}
+
 jobs:
+  Docker-image:
+    runs-on: ubuntu-latest
+    needs: [Build]
+    permissions:
+      packages: write
+    steps:
+    - name: Download code
+      uses: actions/download-artifact@v4
+      with:
+        name: code
+        path: .
+  
   Linting:
     runs-on: ubuntu-latest
     needs: [Build]
